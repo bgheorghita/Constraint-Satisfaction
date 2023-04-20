@@ -2,6 +2,8 @@
 Experimental Analysis of Algorithms - Constraint Satisfaction
 
 ## Map Coloring Problem (involves variables that have discrete, finite domains)
+![map example](img-readme/map.PNG)
+
 
 Constraint satisfaction problems (CSPs) represent a state with a set of variable/value
 pairs and represent the conditions for a solution by a set of constraints on the variables.
