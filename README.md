@@ -27,7 +27,8 @@ variables involved in the constraint must have different values)
 
 
 Backtracking Search
-- depth-first search + variable ordering (e.g.: minimum-remaining-values (MRV) heuristic) + fail when constraint is not satisfied 
+- depth-first search + variable ordering (e.g.: minimum-remaining-values (MRV) heuristic - it picks a variable that is most likely to cause a failure
+soon) + fail when constraint is not satisfied 
 - chooses values for one variable at a time and backtracks when a variable has no legal values left to assign
 
 
