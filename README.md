@@ -30,6 +30,9 @@ Backtracking Search
 - depth-first search + variable ordering + fail when constraint is not satisfied 
 - chooses values for one variable at a time and backtracks when a variable has no legal values left to assign
 
+
+![backtracking search algorithm](img-readme/bkt.PNG)
+
 Backtracking Search Optimizations:
 - can be improved using inference techniques that use the constraints to infer which variable/value pairs
 are consistent and which are not (arc-, path-, or k-consistency)
