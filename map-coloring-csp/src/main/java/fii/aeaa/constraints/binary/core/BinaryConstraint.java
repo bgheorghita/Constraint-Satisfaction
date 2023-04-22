@@ -1,5 +1,6 @@
 package fii.aeaa.constraints.binary.core;
 
+import fii.aeaa.models.Color;
 import fii.aeaa.models.Node;
 
 public abstract class BinaryConstraint {
@@ -15,5 +16,5 @@ public abstract class BinaryConstraint {
         return this.firstNodeConstrained.equals(firstNodeConstrained) && this.secondNodeConstrained.equals(secondNodeConstrained)
                 || this.firstNodeConstrained.equals(secondNodeConstrained) && this.secondNodeConstrained.equals(firstNodeConstrained);
     }
-    public abstract boolean isConsistent(String firstNodeColor, String secondNodeColor);
+    public abstract boolean isConsistent(Color firstNodeColor, Color secondNodeColor);
 }

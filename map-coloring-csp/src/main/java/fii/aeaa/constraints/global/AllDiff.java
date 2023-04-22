@@ -1,5 +1,6 @@
 package fii.aeaa.constraints.global;
 
+import fii.aeaa.models.Color;
 import fii.aeaa.models.Node;
 
 public class AllDiff extends GlobalConstraint{
@@ -9,7 +10,7 @@ public class AllDiff extends GlobalConstraint{
     }
 
     @Override
-    public boolean isConsistent(String firstNodeColor, String secondNodeColor) {
+    public boolean isConsistent(Color firstNodeColor, Color secondNodeColor) {
         return !firstNodeColor.equals(secondNodeColor);
     }
 }

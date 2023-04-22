@@ -3,6 +3,7 @@ package fii.aeaa.constraints;
 import fii.aeaa.constraints.binary.core.BinaryConstraint;
 import fii.aeaa.constraints.global.GlobalConstraint;
 import fii.aeaa.constraints.unary.core.UnaryConstraint;
+import fii.aeaa.models.Color;
 import fii.aeaa.models.Graph;
 import fii.aeaa.models.Node;
 
@@ -54,14 +55,14 @@ public class GraphColoringConstraintImpl implements GraphColoringConstraint {
     }
 
     // no adjacent nodes can have the same color
-    private boolean adjacentNodesDiffColorConstraintNotSatisfied(Node currentNode, String currentColor, Map<Node, String> coloredNodesResult) {
+    private boolean adjacentNodesDiffColorConstraintNotSatisfied(Node currentNode, Color currentColor, Map<Node, Color> coloredNodesResult) {
         if(!adjacencyNodesDiffColorConstraint){
             return false;
         }
 
         Set<Node> currentNodeNeighbors = graph.getNodeNeighbors(currentNode);
         for (Node nodeNeighbor : currentNodeNeighbors) {
-            String nodeNeighborColor = coloredNodesResult.get(nodeNeighbor);
+            Color nodeNeighborColor = coloredNodesResult.get(nodeNeighbor);
             if (coloredNodesResult.containsKey(nodeNeighbor) && currentColor.equals(nodeNeighborColor)) {
                 return true;
             }
@@ -69,15 +70,15 @@ public class GraphColoringConstraintImpl implements GraphColoringConstraint {
         return false;
     }
 
-    private boolean globalConstraintsNotSatisfied(Node currentNode, String currentColor, Map<Node, String> coloredNodesResult) {
+    private boolean globalConstraintsNotSatisfied(Node currentNode, Color currentColor, Map<Node, Color> coloredNodesResult) {
         if(globalConstraints == null) {
             return false;
         }
-        // TODO: if two nodes A, B
+
         for(GlobalConstraint globalConstraint : globalConstraints){
             for (Node constrainedNode : globalConstraint.getConstrainedNodes()) {
                 if (coloredNodesResult.containsKey(constrainedNode)) {
-                    String color = coloredNodesResult.get(constrainedNode);
+                    Color color = coloredNodesResult.get(constrainedNode);
                     if(globalConstraint.isSubjectTo(currentNode) && !globalConstraint.isConsistent(color, currentColor)){
                         return true;
                     }
@@ -87,15 +88,15 @@ public class GraphColoringConstraintImpl implements GraphColoringConstraint {
         return false;
     }
 
-    private boolean binaryConstraintsSatisfied(Node currentNode, String currentColor, Map<Node, String> coloredNodesResult) {
+    private boolean binaryConstraintsSatisfied(Node currentNode, Color currentColor, Map<Node, Color> coloredNodesResult) {
         if(binaryConstraints == null){
             return true;
         }
 
         for(BinaryConstraint binaryConstraint : binaryConstraints){
-            for(Map.Entry<Node, String> entry : coloredNodesResult.entrySet()){
+            for(Map.Entry<Node, Color> entry : coloredNodesResult.entrySet()){
                 Node node = entry.getKey();
-                String nodeColor = entry.getValue();
+                Color nodeColor = entry.getValue();
                 if(binaryConstraint.isSubjectTo(node, currentNode)){
                     if(!binaryConstraint.isConsistent(nodeColor, currentColor)){
                         return false;
@@ -106,7 +107,7 @@ public class GraphColoringConstraintImpl implements GraphColoringConstraint {
         return true;
     }
 
-    private boolean unaryConstraintsSatisfied(Node nodeName, String color) {
+    private boolean unaryConstraintsSatisfied(Node nodeName, Color color) {
         if(unaryConstraints == null){
             return true;
         }
@@ -120,7 +121,7 @@ public class GraphColoringConstraintImpl implements GraphColoringConstraint {
     }
 
     @Override
-    public boolean isConsistent(Map<Node, String> coloredNodesResult, Node currentNode, String currentColor) {
+    public boolean isConsistent(Map<Node, Color> coloredNodesResult, Node currentNode, Color currentColor) {
         boolean unaryConstraintsSatisfied = unaryConstraintsSatisfied(currentNode, currentColor);
         boolean binaryConstrainsSatisfied = binaryConstraintsSatisfied(currentNode, currentColor, coloredNodesResult);
         boolean globalConstraintsSatisfied = !globalConstraintsNotSatisfied(currentNode, currentColor, coloredNodesResult);

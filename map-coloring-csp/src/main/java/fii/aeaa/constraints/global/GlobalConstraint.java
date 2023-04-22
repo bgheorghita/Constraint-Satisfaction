@@ -1,5 +1,6 @@
 package fii.aeaa.constraints.global;
 
+import fii.aeaa.models.Color;
 import fii.aeaa.models.Node;
 
 import java.util.*;
@@ -12,13 +13,13 @@ public abstract class GlobalConstraint {
         this.constrainedNodes.addAll(Arrays.asList(constrainedNodes));
     }
 
-    public List<Node> getConstrainedNodes() {
-        return new ArrayList<>(constrainedNodes);
+    public Set<Node> getConstrainedNodes() {
+        return new HashSet<>(constrainedNodes);
     }
 
     public boolean isSubjectTo(Node constrainedNode){
         return constrainedNodes.contains(constrainedNode);
     }
 
-    public abstract boolean isConsistent(String firstNodeColor, String secondNodeColor);
+    public abstract boolean isConsistent(Color firstNodeColor, Color secondNodeColor);
 }

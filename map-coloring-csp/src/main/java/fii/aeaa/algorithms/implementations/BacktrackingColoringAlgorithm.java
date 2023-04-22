@@ -2,6 +2,7 @@ package fii.aeaa.algorithms.implementations;
 
 import fii.aeaa.algorithms.core.ColoringAlgorithm;
 import fii.aeaa.constraints.GraphColoringConstraint;
+import fii.aeaa.models.Color;
 import fii.aeaa.models.Graph;
 import fii.aeaa.models.Node;
 
@@ -9,14 +10,14 @@ import java.util.*;
 
 public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
 
-    public BacktrackingColoringAlgorithm(Graph graph, String[] availableColors,
+    public BacktrackingColoringAlgorithm(Graph graph, Color[] availableColors,
                                          GraphColoringConstraint graphColoringConstraint) {
         super(graph, availableColors, graphColoringConstraint);
     }
 
     @Override
-    public Map<Node, String> colorGraph() {
-        Map<Node, String> coloredNodesResult = new HashMap<>();
+    public Map<Node, Color> colorGraph() {
+        Map<Node, Color> coloredNodesResult = new HashMap<>();
         Set<Node> uncoloredNodes = this.graph.getNodesDFS();
 
         boolean solution = backtrackingSearch(coloredNodesResult, uncoloredNodes);
@@ -31,7 +32,7 @@ public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
         return coloredNodesResult;
     }
 
-    private boolean backtrackingSearch(Map<Node, String> coloredNodesResult, Set<Node> uncoloredNodes) {
+    private boolean backtrackingSearch(Map<Node, Color> coloredNodesResult, Set<Node> uncoloredNodes) {
         // assignment is complete
         if (uncoloredNodes.isEmpty()) {
             return true;
@@ -42,7 +43,7 @@ public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
         System.out.println("Node received: " + currentNode);
 
         // for each value in Order-Domain-Value
-        for (String currentColor : availableColors) {
+        for (Color currentColor : availableColors) {
             // check if value is consistent with assignment
             if (graphColoringConstraint.isConsistent(coloredNodesResult, currentNode, currentColor)) {
 

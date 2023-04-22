@@ -1,6 +1,7 @@
 package fii.aeaa.constraints.binary.implementations;
 
 import fii.aeaa.constraints.binary.core.BinaryConstraint;
+import fii.aeaa.models.Color;
 import fii.aeaa.models.Node;
 
 public class DifferentColorBinaryConstraint extends BinaryConstraint {
@@ -10,7 +11,7 @@ public class DifferentColorBinaryConstraint extends BinaryConstraint {
     }
 
     @Override
-    public boolean isConsistent(String firstNodeColor, String secondNodeColor) {
+    public boolean isConsistent(Color firstNodeColor, Color secondNodeColor) {
         return !firstNodeColor.equals(secondNodeColor);
     }
 }

@@ -46,11 +46,11 @@ public class Main {
 
         graph.print();
 
-        String[] colors = new String[]{Color.RED.name(), Color.GREEN.name(), Color.BLUE.name(), Color.YELLOW.name()};
+        Color[] colors = new Color[]{Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
 
-        UnaryConstraint WA_ColorIsGreen = new ExactColorUnaryConstraint(WA, Color.GREEN.name());
-        UnaryConstraint T_ColorIsBlue = new ExactColorUnaryConstraint(T, Color.BLUE.name());
-        UnaryConstraint SA_ColorIsNotRed = new DifferentColorUnaryConstraint(SA, Color.RED.name());
+        UnaryConstraint WA_ColorIsGreen = new ExactColorUnaryConstraint(WA, Color.GREEN);
+        UnaryConstraint T_ColorIsBlue = new ExactColorUnaryConstraint(T, Color.BLUE);
+        UnaryConstraint SA_ColorIsNotRed = new DifferentColorUnaryConstraint(SA, Color.RED);
         BinaryConstraint V_IsDifferentColorThan_Q = new DifferentColorBinaryConstraint(V, Q);
         GlobalConstraint Q_And_WA_And_T_DifferentColors = new AllDiff(Q, WA, T);
 
