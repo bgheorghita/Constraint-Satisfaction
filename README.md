@@ -46,4 +46,20 @@ Heuristics
 - Local search using the min-conflicts heuristic
 
 
+ <br>
+ <br>
+
+
+<b>Another aproach</b> to solve the problem is to use local search algorithms and heuristics such as min-conflicts.  <br>
+Idea: the initial state assigns a value to every variable, and the search changes the value of one variable at a time, and the point of local search is to eliminate the violated constraints. <br>
+
+![map example](img-readme/local-search.PNG)
+
+ <br>
+ <br>
+ 
+ <b>Tree-structured CSP</b> is another way to solve the graph-coloring problem by decompose it into many subproblems. The constraint graph should be reduced to trees based on removing nodes or based on collapsing nodes together. <br>
+ 
+ ![map example](img-readme/tree.PNG)
+
 #### References: Stuart J. Russell and Peter Norvig. Artificial Intelligence: A Modern Approach, chapter 6 (Constraint Satisfaction Problems)
