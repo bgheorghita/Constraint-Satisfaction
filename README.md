@@ -58,7 +58,7 @@ Idea: the initial state assigns a value to every variable, and the search change
  <br>
  <br>
  
- <b>Tree-structured CSP</b> is another way to solve the graph-coloring problem by decompose it into many subproblems. The constraint graph should be reduced to trees based on removing nodes or based on collapsing nodes together. <br>
+ <b>Tree-structured CSP</b> is another way to solve the graph-coloring problem by decompose it into many subproblems. The constraint graph should be reduced to trees (any two variables are connected by only one path) based on removing nodes or based on collapsing nodes together. <br>
  
  ![map example](img-readme/tree.PNG)
 
