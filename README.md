@@ -36,7 +36,7 @@ soon) + fail when constraint is not satisfied
 
 Backtracking Search Optimizations:
 - can be improved using inference techniques that use the constraints to infer which variable/value pairs
-are consistent and which are not (arc-, path-, or k-consistency)
+are consistent and which are not (arc-, path-, or k-consistency, forward checking (Whenever a variable X is assigned, the forward-checking process establishes arc consistency for it: for each unassigned variable Y that is connected to X by a constraint, delete from Y ’s domain any value that is inconsistent with the value chosen for X))
 - can be improved using heuristics
 
 Heuristics
@@ -45,5 +45,21 @@ Heuristics
 - Conflict-directed backjumping backtracks directly to the source of the problem
 - Local search using the min-conflicts heuristic
 
+
+ <br>
+ <br>
+
+
+<b>Another aproach</b> to solve the problem is to use local search algorithms and heuristics such as min-conflicts.  <br>
+Idea: the initial state assigns a value to every variable, and the search changes the value of one variable at a time, and the point of local search is to eliminate the violated constraints. <br>
+
+![map example](img-readme/local-search.PNG)
+
+ <br>
+ <br>
+ 
+ <b>Tree-structured CSP</b> is another way to solve the graph-coloring problem by decompose it into many subproblems. The constraint graph should be reduced to trees (any two variables are connected by only one path) based on removing nodes or based on collapsing nodes together. <br>
+ 
+ ![map example](img-readme/tree.PNG)
 
 #### References: Stuart J. Russell and Peter Norvig. Artificial Intelligence: A Modern Approach, chapter 6 (Constraint Satisfaction Problems)
