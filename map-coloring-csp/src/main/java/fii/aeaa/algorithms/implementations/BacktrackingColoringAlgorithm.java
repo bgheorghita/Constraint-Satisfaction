@@ -10,9 +10,8 @@ import java.util.*;
 
 public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
 
-    public BacktrackingColoringAlgorithm(Graph graph, Color[] availableColors,
-                                         GraphColoringConstraint graphColoringConstraint) {
-        super(graph, availableColors, graphColoringConstraint);
+    public BacktrackingColoringAlgorithm(Graph graph, GraphColoringConstraint graphColoringConstraint) {
+        super(graph, graphColoringConstraint);
     }
 
     @Override
@@ -26,7 +25,7 @@ public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
             System.out.println("Nodes colored successfully:");
             coloredNodesResult.forEach((node, color) -> System.out.println(node + ": " + color));
         } else {
-            System.out.println("Failed to color nodes using " + availableColors.length + " colors.");
+            System.out.println("Failed to color nodes.");
         }
 
         return coloredNodesResult;
@@ -40,10 +39,11 @@ public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
 
         // Select-Unassigned-Variable
         Node currentNode = uncoloredNodes.iterator().next();
-        System.out.println("Node received: " + currentNode);
+        Set<Color> currentDomain = currentNode.getDomain();
+        System.out.println("Node received: " + currentNode + ", domain: " + currentDomain);
 
         // for each value in Order-Domain-Value
-        for (Color currentColor : availableColors) {
+        for (Color currentColor : currentDomain) {
             // check if value is consistent with assignment
             if (graphColoringConstraint.isConsistent(coloredNodesResult, currentNode, currentColor)) {
 
@@ -51,7 +51,8 @@ public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
                 coloredNodesResult.put(currentNode, currentColor);
                 uncoloredNodes.remove(currentNode);
 
-                // inferences will be added here //
+                // inferences //
+                applyForwardChecking(uncoloredNodes, currentNode, currentColor);
 
                 // continue with the next unassigned variable
                 if (backtrackingSearch(coloredNodesResult, uncoloredNodes)) {
@@ -62,10 +63,29 @@ public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
                 System.out.println("backtrack");
                 coloredNodesResult.remove(currentNode);
                 uncoloredNodes.add(currentNode);
+                redoForwardChecking(uncoloredNodes, currentNode, currentColor);
             }
         }
 
         // No valid coloring found
         return false;
+    }
+
+    private void redoForwardChecking(Set<Node> uncoloredNodes, Node currentNode, Color currentColor) {
+        Set<Node> neighbors = this.graph.getNodeNeighbors(currentNode);
+        neighbors.forEach(neighbor -> {
+            if(uncoloredNodes.contains(neighbor)){
+                neighbor.addToDomain(currentColor);
+            }
+        });
+    }
+
+    private void applyForwardChecking(Set<Node> uncoloredNodes, Node currentNode, Color currentColor) {
+        Set<Node> neighbors = this.graph.getNodeNeighbors(currentNode);
+        neighbors.forEach(neighbor -> {
+            if(uncoloredNodes.contains(neighbor)){
+                neighbor.removeFromDomain(currentColor);
+            }
+        });
     }
 }

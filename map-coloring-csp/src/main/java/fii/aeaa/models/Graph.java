@@ -10,8 +10,12 @@ public class Graph {
     }
 
     public void addNode(Node node){
-        Set<Node> currentList = new HashSet<>();
+        Set<Node> currentList = new LinkedHashSet<>();
         adjacencyList.put(node, currentList);
+    }
+
+    public Map<Node, Set<Node>> getAdjacencyList(){
+        return new HashMap<>(adjacencyList);
     }
 
     public void addEdge(Node src, Node dst){
@@ -38,6 +42,7 @@ public class Graph {
         }
         return visited;
     }
+
 
     private void dfs(Node root, Set<Node> visited){
         Stack<Node> stack = new Stack<>();
@@ -68,16 +73,6 @@ public class Graph {
             }
         }
         return visited;
-    }
-
-    public Set<Node> getNodeNeighbors(String nodeName){
-        for (Map.Entry<Node, Set<Node>> entry : adjacencyList.entrySet()) {
-            Node node = entry.getKey();
-            if(node.getName().equals(nodeName)){
-                return entry.getValue();
-            }
-        }
-        return new HashSet<>();
     }
 
     public Set<Node> getNodeNeighbors(Node node){

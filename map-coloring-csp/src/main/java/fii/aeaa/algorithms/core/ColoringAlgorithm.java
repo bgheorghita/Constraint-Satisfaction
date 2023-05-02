@@ -9,12 +9,10 @@ import java.util.Map;
 
 public abstract class ColoringAlgorithm {
     protected final Graph graph;
-    protected final Color[] availableColors;
     protected GraphColoringConstraint graphColoringConstraint;
 
-    public ColoringAlgorithm(Graph graph, Color[] availableColors, GraphColoringConstraint graphColoringConstraint){
+    public ColoringAlgorithm(Graph graph, GraphColoringConstraint graphColoringConstraint){
         this.graph = graph;
-        this.availableColors = availableColors;
         this.graphColoringConstraint = graphColoringConstraint;
     }
 
