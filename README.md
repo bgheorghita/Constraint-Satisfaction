@@ -36,7 +36,7 @@ soon) + fail when constraint is not satisfied
 
 Backtracking Search Optimizations:
 - can be improved using inference techniques that use the constraints to infer which variable/value pairs
-are consistent and which are not (arc-, path-, or k-consistency)
+are consistent and which are not (arc-, path-, or k-consistency, forward checking (Whenever a variable X is assigned, the forward-checking process establishes arc consistency for it: for each unassigned variable Y that is connected to X by a constraint, delete from Y ’s domain any value that is inconsistent with the value chosen for X))
 - can be improved using heuristics
 
 Heuristics
