@@ -1,9 +1,9 @@
 package fii.aeaa.constraints.binary.core;
 
-import fii.aeaa.models.Color;
+import fii.aeaa.constraints.Constraint;
 import fii.aeaa.models.Node;
 
-public abstract class BinaryConstraint {
+public abstract class BinaryConstraint implements Constraint {
     protected final Node firstNodeConstrained;
     protected final Node secondNodeConstrained;
 
@@ -12,9 +12,16 @@ public abstract class BinaryConstraint {
         this.secondNodeConstrained = secondNodeConstrained;
     }
 
-    public boolean isSubjectTo(Node firstNodeConstrained, Node secondNodeConstrained){
-        return this.firstNodeConstrained.equals(firstNodeConstrained) && this.secondNodeConstrained.equals(secondNodeConstrained)
-                || this.firstNodeConstrained.equals(secondNodeConstrained) && this.secondNodeConstrained.equals(firstNodeConstrained);
+    public Node getFirstNodeConstrained() {
+        return firstNodeConstrained;
     }
-    public abstract boolean isConsistent(Color firstNodeColor, Color secondNodeColor);
+
+    public Node getSecondNodeConstrained() {
+        return secondNodeConstrained;
+    }
+
+    @Override
+    public boolean isSubjectTo(Node node){
+        return firstNodeConstrained.getName().equals(node.getName()) || secondNodeConstrained.getName().equals(node.getName());
+    }
 }

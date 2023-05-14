@@ -1,25 +1,18 @@
 package fii.aeaa.constraints.global;
 
-import fii.aeaa.models.Color;
+import fii.aeaa.constraints.Constraint;
 import fii.aeaa.models.Node;
 
 import java.util.*;
 
-public abstract class GlobalConstraint {
-    private final Set<Node> constrainedNodes;
+public abstract class GlobalConstraint implements Constraint {
+    protected final List<Node> constrainedNodes;
 
-    public GlobalConstraint(Node[] constrainedNodes){
-        this.constrainedNodes = new HashSet<>();
-        this.constrainedNodes.addAll(Arrays.asList(constrainedNodes));
-    }
-
-    public Set<Node> getConstrainedNodes() {
-        return new HashSet<>(constrainedNodes);
+    public GlobalConstraint(List<Node> constrainedNodes){
+        this.constrainedNodes = constrainedNodes;
     }
 
     public boolean isSubjectTo(Node constrainedNode){
         return constrainedNodes.contains(constrainedNode);
     }
-
-    public abstract boolean isConsistent(Color firstNodeColor, Color secondNodeColor);
 }

@@ -25,14 +25,6 @@ public class Graph {
         dstList.add(src);
     }
 
-    public void print(){
-        for (Map.Entry<Node, Set<Node>> entry : adjacencyList.entrySet()) {
-            Node node = entry.getKey();
-            Set<Node> neighbors = entry.getValue();
-            System.out.println(node + " -> " + neighbors);
-        }
-    }
-
     public Set<Node> getNodesDFS(){
         Set<Node> visited = new LinkedHashSet<>();
         for(Node node : adjacencyList.keySet()){
@@ -77,5 +69,15 @@ public class Graph {
 
     public Set<Node> getNodeNeighbors(Node node){
         return adjacencyList.get(node);
+    }
+
+    public Node getNodeByName(String name){
+        for (Map.Entry<Node, Set<Node>> entry : adjacencyList.entrySet()) {
+            Node node = entry.getKey();
+            if(node.getName().equals(name)){
+                return node;
+            }
+        }
+        throw new NoSuchElementException("Node " + name + " does not exist in the graph.");
     }
 }

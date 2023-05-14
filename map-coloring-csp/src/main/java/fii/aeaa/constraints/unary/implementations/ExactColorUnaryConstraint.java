@@ -5,6 +5,8 @@ import fii.aeaa.constraints.unary.core.UnaryConstraint;
 import fii.aeaa.models.Color;
 import fii.aeaa.models.Node;
 
+import java.util.List;
+
 public class ExactColorUnaryConstraint extends UnaryConstraint {
 
     public ExactColorUnaryConstraint(Node constrainedNode, Color constrainedColor) {
@@ -12,7 +14,12 @@ public class ExactColorUnaryConstraint extends UnaryConstraint {
     }
 
     @Override
-    public boolean isConsistent(Color constrainedColor) {
-        return constrainedColor.equals(this.constrainedColor);
+    public boolean isConsistent(List<Color> colors) {
+        if(colors == null || colors.size() != 1){
+            return false;
+        }
+        String constraintColorString = constrainedColor.toString();
+        String wantedColorString = colors.get(0).toString();
+        return constraintColorString.equals(wantedColorString);
     }
 }

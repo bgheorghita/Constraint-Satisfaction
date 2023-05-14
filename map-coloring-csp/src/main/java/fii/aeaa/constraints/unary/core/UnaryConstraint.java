@@ -1,9 +1,10 @@
 package fii.aeaa.constraints.unary.core;
 
+import fii.aeaa.constraints.Constraint;
 import fii.aeaa.models.Color;
 import fii.aeaa.models.Node;
 
-public abstract class UnaryConstraint {
+public abstract class UnaryConstraint implements Constraint {
     protected final Node constrainedNode;
     protected final Color constrainedColor;
 
@@ -12,8 +13,8 @@ public abstract class UnaryConstraint {
         this.constrainedColor = constrainedColor;
     }
 
-    public abstract boolean isConsistent(Color color);
-    public boolean isSubjectTo(Node constrainedNode){
-        return constrainedNode.equals(this.constrainedNode);
+    @Override
+    public boolean isSubjectTo(Node node){
+        return constrainedNode.getName().equals(node.getName());
     }
 }
