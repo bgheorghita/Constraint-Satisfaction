@@ -2,6 +2,8 @@ package fii.aeaa.algorithms.implementations;
 
 import fii.aeaa.algorithms.core.ColoringAlgorithm;
 import fii.aeaa.constraints.ConstraintType;
+import fii.aeaa.constraints.binary.implementations.DifferentColorBinaryConstraint;
+import fii.aeaa.constraints.binary.implementations.ExactColorBinaryConstraint;
 import fii.aeaa.constraints.managers.GraphConstraintManager;
 import fii.aeaa.constraints.binary.core.BinaryConstraint;
 import fii.aeaa.models.Arc;
@@ -18,8 +20,10 @@ import java.util.stream.Collectors;
 public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
 
     private int iterationCounter = 0;
+    private int numberOfBacktracks = 0;
     private Set<BinaryConstraint> binaryConstraints;
-    private static final Logger LOGGER = LoggerFactory.getLogger(BacktrackingColoringAlgorithm.class);
+    private final Map<Node, Set<Color>> auxRemovedColors = new HashMap<>();
+    private final Logger LOGGER = LoggerFactory.getLogger(BacktrackingColoringAlgorithm.class);
 
     public BacktrackingColoringAlgorithm(Graph graph, GraphConstraintManager graphConstraintManager) {
         super(graph, graphConstraintManager);
@@ -44,16 +48,19 @@ public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
         Map<Node, Color> coloredNodesResult = new HashMap<>();
         Set<Node> uncoloredNodes = this.graph.getNodesDFS();
 
+//        applyAC3(binaryConstraints);
+
         long start = System.currentTimeMillis();
         boolean solution = backtrackingSearch(coloredNodesResult, uncoloredNodes);
         long end = System.currentTimeMillis();
 
         LOGGER.info("Time: " + (end - start) + " ms");
         LOGGER.info("Backtracking iterations: " + iterationCounter);
+        LOGGER.info("Number of backtracks: " + numberOfBacktracks);
+        LOGGER.info("Binary Constraints: " + binaryConstraints.size());
 
         if(solution){
             LOGGER.info("Nodes colored successfully.");
-            coloredNodesResult.forEach((node, color) -> System.out.println(node + ": " + color));
         } else {
             LOGGER.info("Failed to color nodes.");
             coloredNodesResult = new HashMap<>();
@@ -71,10 +78,9 @@ public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
         iterationCounter++;
 
         // Select-Unassigned-Variable
-//        Node currentNode = uncoloredNodes.iterator().next();
-        Node currentNode = getVariableMRV(uncoloredNodes, true);
+        Node currentNode = uncoloredNodes.iterator().next();
+//        Node currentNode = getVariableMRV(uncoloredNodes, true);
         Set<Color> currentDomain = currentNode.getDomain();
-        System.out.println("Node received: " + currentNode + ", domain: " + currentDomain);
 
         // for each value in Order-Domain-Value
         for (Color currentColor : currentDomain) {
@@ -94,10 +100,10 @@ public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
                 }
 
                 // Backtrack (constraints not satisfied)
-                System.out.println("backtrack");
                 coloredNodesResult.remove(currentNode);
                 uncoloredNodes.add(currentNode);
                 redoForwardChecking(uncoloredNodes, currentNode, currentColor);
+                numberOfBacktracks++;
             }
         }
 
@@ -114,22 +120,22 @@ public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
     Node getVariableMRV(Set<Node> uncoloredNodes, boolean applyDegreeHeuristic){
         int minimumRemainingValues = Integer.MAX_VALUE; // smallest domain size of a variable
         int maxDegree = -1;
-        Node mostConstrainedVariable = null; // variable with the smallest domain size
+        Node chosenVariable = null; // variable with the smallest domain size
 
         for(Node variable : uncoloredNodes){
             int domainSize = variable.getDomain().size();
             int degree = getNumberOfBinaryConstraints(variable);
             if(domainSize < minimumRemainingValues){
                 minimumRemainingValues = domainSize;
-                mostConstrainedVariable = variable;
+                chosenVariable = variable;
                 maxDegree = degree;
             } else if(applyDegreeHeuristic && (domainSize == minimumRemainingValues && degree > maxDegree)){
-                mostConstrainedVariable = variable;
+                chosenVariable = variable;
                 maxDegree = degree;
             }
         }
 
-        return mostConstrainedVariable;
+        return chosenVariable;
     }
 
     private int getNumberOfBinaryConstraints(Node node) {
@@ -144,21 +150,41 @@ public class BacktrackingColoringAlgorithm extends ColoringAlgorithm {
         return numberConstraints;
     }
 
-    private void redoForwardChecking(Set<Node> uncoloredNodes, Node currentNode, Color currentColor) {
-        for (BinaryConstraint binaryConstraint : binaryConstraints){
-            for(Node uncoloredNode : uncoloredNodes){
-                if(binaryConstraint.isSubjectTo(currentNode) && binaryConstraint.isSubjectTo(uncoloredNode)){
-                    uncoloredNode.addToDomain(currentColor);
-                }
-            }
-        }
-    }
-
+    /*
+        Forward Checking is applied only for Binary Constraints
+     */
     private void applyForwardChecking(Set<Node> uncoloredNodes, Node currentNode, Color currentColor) {
         for (BinaryConstraint binaryConstraint : binaryConstraints){
             for(Node uncoloredNode : uncoloredNodes){
                 if(binaryConstraint.isSubjectTo(currentNode) && binaryConstraint.isSubjectTo(uncoloredNode)){
-                    uncoloredNode.removeFromDomain(currentColor);
+                    if(binaryConstraint instanceof DifferentColorBinaryConstraint){
+                        uncoloredNode.removeFromDomain(currentColor);
+                    } else if(binaryConstraint instanceof ExactColorBinaryConstraint){
+                        Set<Color> removedColors = new HashSet<>();
+                        uncoloredNode.getDomain().forEach(value -> {
+                            if(!value.equals(currentColor)){
+                                uncoloredNode.removeFromDomain(value);
+                                removedColors.add(value);
+                            }
+                        });
+                        auxRemovedColors.put(uncoloredNode, removedColors);
+                    }
+                }
+            }
+        }
+    }
+    private void redoForwardChecking(Set<Node> uncoloredNodes, Node currentNode, Color currentColor) {
+        for (BinaryConstraint binaryConstraint : binaryConstraints){
+            for(Node uncoloredNode : uncoloredNodes){
+                if(binaryConstraint.isSubjectTo(currentNode) && binaryConstraint.isSubjectTo(uncoloredNode)){
+                    if(binaryConstraint instanceof DifferentColorBinaryConstraint){
+                        uncoloredNode.addToDomain(currentColor);
+                    } else if(binaryConstraint instanceof ExactColorBinaryConstraint){
+                        Set<Color> deletedColors = auxRemovedColors.get(uncoloredNode);
+                        if(deletedColors != null){
+                            deletedColors.forEach(uncoloredNode::addToDomain);
+                        }
+                    }
                 }
             }
         }

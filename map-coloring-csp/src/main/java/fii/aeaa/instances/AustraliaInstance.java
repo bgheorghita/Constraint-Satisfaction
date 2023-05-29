@@ -5,11 +5,12 @@ import fii.aeaa.constraints.managers.GraphConstraintManagerImpl;
 import fii.aeaa.models.Graph;
 import fii.aeaa.models.Node;
 import fii.aeaa.utils.ConstraintCreator;
+import fii.aeaa.utils.DomainCreator;
 
 import java.util.*;
 
 public class AustraliaInstance extends TestInstance{
-    protected void createGraph(){
+    protected void initGraph(){
         graph = new Graph();
 
         Node WA = new Node("WA");
@@ -37,11 +38,11 @@ public class AustraliaInstance extends TestInstance{
         graph.addEdge(SA, V);
         graph.addEdge(NSW, V);
 
-        graph.getNodesDFS().forEach(node -> node.setDomain(createDomainFourColors()));
+        DomainCreator.createDomainFourColors(graph.getNodesDFS());
     }
 
     @Override
-    protected void createConstraintManager() {
+    protected void initConstraintManager() {
         Set<BinaryConstraint> binaryConstraints = ConstraintCreator.createAdjacencyConstraints(graph);
 
         graphConstraintManager = new GraphConstraintManagerImpl()

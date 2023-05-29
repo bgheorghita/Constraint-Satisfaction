@@ -3,19 +3,18 @@ package fii.aeaa.instances;
 import fii.aeaa.constraints.binary.core.BinaryConstraint;
 import fii.aeaa.constraints.binary.implementations.DifferentColorBinaryConstraint;
 import fii.aeaa.constraints.binary.implementations.ExactColorBinaryConstraint;
-import fii.aeaa.constraints.global.AllDiff;
-import fii.aeaa.constraints.global.GlobalConstraint;
 import fii.aeaa.constraints.managers.GraphConstraintManagerImpl;
 import fii.aeaa.models.Graph;
 import fii.aeaa.models.Node;
 import fii.aeaa.utils.ConstraintCreator;
+import fii.aeaa.utils.DomainCreator;
 
 import java.util.*;
 
 public class RomaniaInstance extends TestInstance{
 
     @Override
-    protected void createConstraintManager() {
+    protected void initConstraintManager() {
         Node Teleorman = graph.getNodeByName("Teleorman");
         Node Alba = graph.getNodeByName("Alba");
         Node Gorj = graph.getNodeByName("Gorj");
@@ -42,17 +41,13 @@ public class RomaniaInstance extends TestInstance{
         binaryConstraints.add(new DifferentColorBinaryConstraint(Valcea, Ialomita));
         binaryConstraints.add(new ExactColorBinaryConstraint(Iasi, Hunedoara));
 
-        Set<GlobalConstraint> globalConstraints = new HashSet<>();
-        globalConstraints.add(new AllDiff(List.of(Iasi, Bucuresti, Braila, Timisoara)));
-
         graphConstraintManager = new GraphConstraintManagerImpl()
                 .withBinaryConstraints(binaryConstraints)
-                .withGlobalConstraints(globalConstraints)
                 .build();
     }
 
     @Override
-    protected void createGraph() {
+    protected void initGraph() {
         graph = new Graph();
         Node SatuMare = new Node("Satu Mare");
         Node Bihor = new Node("Bihor");
@@ -240,7 +235,6 @@ public class RomaniaInstance extends TestInstance{
         graph.addEdge(Vaslui, Iasi);
         graph.addEdge(Iasi, Botosani);
 
-        Set<Node> nodes = graph.getNodesDFS();
-        nodes.forEach(node -> node.setDomain(createDomainFourColors()));
+        DomainCreator.createDomainFourColors(graph.getNodesDFS());
     }
 }
